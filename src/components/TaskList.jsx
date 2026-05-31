@@ -1,4 +1,4 @@
-function TaskList({ tasks, onToggleTask }) {
+function TaskList({ tasks, onToggleTask, onDeleteTask }) {
   return (
     <section>
       <h2>Your Tasks</h2>
@@ -22,6 +22,9 @@ function TaskList({ tasks, onToggleTask }) {
               >
                 {task.text}
               </span>
+              <button onClick={() => onDeleteTask(task.id)}>
+                Delete
+              </button>
             </li>
           ))}
         </ul>
