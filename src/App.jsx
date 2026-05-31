@@ -18,12 +18,20 @@ function App() {
     setTasks([...tasks, newTask]);
   }
 
+  function toggleTask(id) {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, done: !task.done } : task
+      )
+    );
+  }
+
   return (
     <main className="app">
       <Header />
       <NextTask />
       <TaskInput onAddTask={addTask} />
-      <TaskList tasks={tasks} />
+      <TaskList tasks={tasks} onToggleTask={toggleTask} />
     </main>
   );
 }
