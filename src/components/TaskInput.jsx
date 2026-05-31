@@ -1,14 +1,31 @@
-function TaskInput() {
-  return (
-    <section>
-      <h2>Add Task</h2>
+import { useState } from "react";
 
-      <input
-        type="text"
-        placeholder="Enter a task..."
-      />
+function TaskInput({ onAddTask }) {
+    const [text, setText] = useState("");
 
-      <button>Add</button>
+    function handleSubmit() {
+        const cleanText = text.trim();
+
+        if (cleanText === "") {
+            return;
+        }
+
+        onAddTask(cleanText);
+        setText("");
+    }
+
+    return (
+        <section>
+        <h2>Add Task</h2>
+
+        <input
+            type="text"
+            placeholder="Enter a task..."
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+        />
+
+        <button onClick={handleSubmit}>Add</button>
     </section>
   );
 }
