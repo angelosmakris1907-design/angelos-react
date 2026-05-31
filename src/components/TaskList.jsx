@@ -1,4 +1,4 @@
-function TaskList({ tasks, onToggleTask, onDeleteTask }) {
+function TaskList({ tasks, onToggleTask, onDeleteTask, onEditTask }) {
   return (
     <section>
       <h2>Your Tasks</h2>
@@ -21,7 +21,26 @@ function TaskList({ tasks, onToggleTask, onDeleteTask }) {
                 }}
               >
                 {task.text}
+                {task.dueDate && (
+                  <small>
+                    {" "}
+                    Due: {new Date(task.dueDate).toLocaleDateString()}
+                  </small>
+                )}
               </span>
+
+              <button
+                onClick={() => {
+                  const newText = prompt("Edit task:", task.text);
+
+                  if (newText && newText.trim() !== "") {
+                     onEditTask(task.id, newText.trim());
+                  }
+                }}
+              >
+                Edit
+              </button>
+
               <button onClick={() => onDeleteTask(task.id)}>
                 Delete
               </button>

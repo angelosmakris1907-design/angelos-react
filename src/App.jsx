@@ -15,11 +15,28 @@ function App() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
+  function getDueDate(text) {
+    const lowerText = text.toLowerCase();
+    const today = new Date();
+
+    if (lowerText.includes("tomorrow")) {
+      today.setDate(today.getDate() + 1);
+      return today.toISOString();
+    }
+
+    if (lowerText.includes("today")) {
+      return today.toISOString();
+    }
+
+    return null;
+  }
+
   function addTask(text) {
     const newTask = {
       id: Date.now(),
       text: text,
       done: false,
+      dueDate: getDueDate(text),
     };
 
     setTasks([...tasks, newTask]);
@@ -37,6 +54,16 @@ function App() {
     setTasks(tasks.filter((task) => task.id !== id));
   }
 
+  function editTask(id, newText) {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id 
+          ? { ...task, text: newText, dueDate: getDueDate(newText) } 
+          : task
+      )
+    );
+  }
+
   return (
     <main className="app">
       <Header />
@@ -46,6 +73,7 @@ function App() {
         tasks={tasks} 
         onToggleTask={toggleTask}
         onDeleteTask={deleteTask} 
+        onEditTask={editTask}
       />
     </main>
   );
