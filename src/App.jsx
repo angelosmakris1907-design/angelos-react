@@ -43,6 +43,27 @@ function App() {
     return `${hour}:${minutes}`;
   }
 
+  function getTaskDateTime(task) {
+    if (!task.dueDate) return null;
+
+    const date = new Date(task.dueDate);
+
+    if (task.dueTime) {
+      const [hour, minute] = task.dueTime.split(":");
+
+      date.setHours(
+        Number(hour),
+        Number(minute),
+        0,
+        0
+      );
+    }
+  
+    
+
+    return date;
+  }
+
   function addTask(text) {
     const newTask = {
       id: Date.now(),
@@ -82,13 +103,24 @@ function App() {
     );
   }
 
+  const sortedTasks = [...tasks].sort((a, b) => {
+      const dateA = getTaskDateTime(a);
+      const dateB = getTaskDateTime(b);
+
+      if (!dateA && !dateB) return 0;
+      if (!dateA) return 1;
+      if (!dateB) return -1;
+
+      return dateA - dateB;
+    });
+
   return (
     <main className="app">
       <Header />
       <NextTask tasks={tasks} />
       <TaskInput onAddTask={addTask} />
       <TaskList 
-        tasks={tasks} 
+        tasks={sortedTasks} 
         onToggleTask={toggleTask}
         onDeleteTask={deleteTask} 
         onEditTask={editTask}
