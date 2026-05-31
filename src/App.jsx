@@ -31,12 +31,25 @@ function App() {
     return null;
   }
 
+  function getDueTime(text) {
+    const lowerText = text.toLowerCase();
+    const match = lowerText.match(/at (\d{1,2})(:\d{2})?/);
+
+    if (!match) return null;
+
+    const hour = match[1];
+    const minutes = match[2] ? match[2].replace(":", "") : "00";
+
+    return `${hour}:${minutes}`;
+  }
+
   function addTask(text) {
     const newTask = {
       id: Date.now(),
       text: text,
       done: false,
       dueDate: getDueDate(text),
+      duetime: getDueTime(text),
     };
 
     setTasks([...tasks, newTask]);
@@ -58,7 +71,12 @@ function App() {
     setTasks(
       tasks.map((task) =>
         task.id === id 
-          ? { ...task, text: newText, dueDate: getDueDate(newText) } 
+          ? { 
+            ...task, 
+            text: newText, 
+            dueDate: getDueDate(newText), 
+            duetime: getDueTime(newText) 
+          } 
           : task
       )
     );

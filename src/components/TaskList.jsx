@@ -27,6 +27,10 @@ function TaskList({ tasks, onToggleTask, onDeleteTask, onEditTask }) {
                     Due: {new Date(task.dueDate).toLocaleDateString()}
                   </small>
                 )}
+
+                {task.duetime && (
+                  <small> Time: {task.duetime}</small>
+                )}
               </span>
 
               <button
