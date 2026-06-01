@@ -115,6 +115,16 @@ function App() {
   }
 
   function deleteTask(id) {
+    const taskToDelete = tasks.find((task) => task.id === id);
+
+    if (!taskToDelete) return;
+
+    setLastDeletedTask(taskToDelete);
+    localStorage.setItem(
+      "lastDeletedTask", 
+      JSON.stringify(taskToDelete)
+    );
+    
     setTasks(tasks.filter((task) => task.id !== id));
   }
 
