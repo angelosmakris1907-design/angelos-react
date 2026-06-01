@@ -464,6 +464,14 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes("what repeats") ||
+      lowerText.includes("recurring tasks")
+    ) {
+      readRecurringTasks();
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -666,6 +674,23 @@ function App() {
       .join(". ");
 
     speak("Your " + category + " tasks are: " + taskText);
+  }
+
+  function readRecurringTasks() {
+    const recurringTasks = sortedTasks.filter(
+      (task) => task.repeat && !task.done
+    );
+
+    if (recurringTasks.length === 0) {
+      speak("You have no recurring tasks.");
+      return;
+    }
+
+    const taskText = recurringTasks
+      .map((task) => `${task.text}, repeating ${task.repeat}`)
+      .join(". ");
+
+    speak("Your recurring tasks are: " + taskText);
   }
 
   function clearCompletedTasks() {
