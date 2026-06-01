@@ -121,6 +121,13 @@ function App() {
 
   function handleVoiceInput(text) {
     addTask(text);
+    speak("Task added: " + text);
+  }
+
+  function speak(text) {
+    const message = new SpeechSynthesisUtterance(text);
+    message.lang = "en-IE";
+    window.speechSynthesis.speak(message);
   }
 
   const sortedTasks = [...tasks].sort((a, b) => {
