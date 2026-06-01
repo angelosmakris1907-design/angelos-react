@@ -21,6 +21,28 @@ function App() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const reminderTasks = getReminderTasks().filter(
+        (task) => !task.reminded
+      );
+
+      reminderTasks.forEach((task) => {
+        speak("Reminder: " + task.text + " is coming up soon.");
+        
+        setTasks((currentTasks) =>
+          currentTasks.map((currentTask) =>
+            currentTask.id === task.id 
+              ? { ...currentTask, reminded: true } 
+              : currentTask
+          )
+        );
+      });
+    }, 60000); 
+
+    return () => clearInterval(interval);
+  }, [tasks]);
+
   function getDueDate(text) {
     const lowerText = text.toLowerCase();
     const today = new Date();
@@ -101,6 +123,7 @@ function App() {
       dueTime: getDueTime(text),
       priority: getPriority(text),
       category: getCategory(text),
+      reminded: false,
     };
 
     setTasks([...tasks, newTask]);
@@ -635,17 +658,12 @@ function App() {
     const now = new Date();
 
     return tasks.filter((task) => {
-      if (!task.dueDate || task.done) return false;
+      if (!task.dueDate || !task.dueTime || task.done) return false;
 
       const dueDate = getTaskDateTime(task);
+      const difference = dueDate.getTime() - now.getTime();
 
-      const difference =
-        dueDate.getTime() - now.getTime();
-
-      return (
-        difference > 0 &&
-        difference <= 15 * 60 * 1000
-      );
+      return difference > 0 && difference <= 15 * 60 * 1000;
     });
   }
 
