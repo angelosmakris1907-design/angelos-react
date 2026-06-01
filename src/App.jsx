@@ -89,7 +89,7 @@ function App() {
       done: false,
       dueDate: getDueDate(text),
       dueTime: getDueTime(text),
-      priority: "medium"
+      priority: getPriority(text),
     };
 
     setTasks([...tasks, newTask]);
@@ -116,7 +116,8 @@ function App() {
             ...task, 
             text: cleanTaskText(newText), 
             dueDate: getDueDate(newText), 
-            dueTime: getDueTime(newText) 
+            dueTime: getDueTime(newText),
+            priority: getPriority(newText), 
           } 
           : task
       )
@@ -411,6 +412,27 @@ function App() {
   function clearCompletedTasks() {
     setTasks(tasks.filter((task) => !task.done));
     speak("I cleared all completed tasks.");
+  }
+
+  function getPriority(text) {
+    const lowerText = text.toLowerCase();
+
+    if (
+      lowerText.includes("urgent") ||
+      lowerText.includes("important") ||
+      lowerText.includes("high priority")
+    ) {
+      return "high";
+    }
+
+    if (
+      lowerText.includes("low priority") ||
+      lowerText.includes("not urgent")
+    ) {
+      return "low";
+    }
+
+    return "medium";
   }
 
   function speak(text) {
