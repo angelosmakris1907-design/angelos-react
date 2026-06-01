@@ -5,6 +5,7 @@ import NextTask from "./components/NextTask";
 import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
 import VoiceButton from "./components/VoiceButton";
+import WeeklyAgenda from "./components/WeeklyAgenda";
 
 function App() {
   const [tasks, setTasks] = useState(() => {
@@ -900,6 +901,7 @@ function App() {
         </section>
       )}
       <NextTask tasks={tasks} />
+      <WeeklyAgenda tasks={sortedTasks} />
       <VoiceButton onVoiceInput={handleVoiceInput} />
       <TaskInput onAddTask={addTask} />
       <button onClick={exportTasks}>
