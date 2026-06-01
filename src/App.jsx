@@ -138,6 +138,14 @@ function App() {
      return;
     }
 
+    if (
+      lowerText.includes("read my tasks") ||
+      lowerText.includes("tell me my tasks")
+    ) {
+      readTasksAloud();
+      return;
+    }
+
     addTask(text);
     speak("Task added: " + text);
   }
@@ -145,6 +153,21 @@ function App() {
   function getNextTask() {
     const activeTasks = sortedTasks.filter((task) => !task.done);
     return activeTasks.length > 0 ? activeTasks[0] : null;
+  }
+
+  function readTasksAloud() {
+    const activeTasks = sortedTasks.filter((task) => !task.done);
+
+    if (activeTasks.length === 0) {
+      speak("You have no active tasks.");
+      return;
+    }
+
+    const taskText = activeTasks
+      .map((task, index) => `Task ${index + 1}: ${task.text}`)
+      .join(". ");
+
+    speak("Here are your tasks. " + taskText);
   }
 
   function speak(text) {
