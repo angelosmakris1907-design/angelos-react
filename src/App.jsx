@@ -115,12 +115,15 @@ function App() {
   }
 
   function addTask(text) {
+
+    const relativeReminder = getRelativeReminder(text);
+
     const newTask = {
       id: Date.now(),
       text: cleanTaskText(text),
       done: false,
-      dueDate: getDueDate(text),
-      dueTime: getDueTime(text),
+      dueDate: relativeReminder ? relativeReminder.dueDate : getDueDate(text),
+      dueTime: relativeReminder ? relativeReminder.dueTime : getDueTime(text),
       priority: getPriority(text),
       category: getCategory(text),
       reminded: false,
@@ -200,6 +203,8 @@ function App() {
       .replace(/high priority/gi, "")
       .replace(/low priority/gi, "")
       .replace(/not urgent/gi, "")
+      .replace(/remind me in \d+ minutes to/gi, "")
+      .replace(/in \d+ minutes?/gi, "")
       .trim();
   }
 
@@ -667,6 +672,22 @@ function App() {
     });
   }
 
+  function getRelativeReminder(text) {
+    const lowerText = text.toLowerCase();
+    const match = lowerText.match(/in (\d+) minutes?/);
+
+    if (!match) return null;
+
+    const minutes = Number(match[1]);
+    const dueDate = new Date();
+
+    dueDate.setMinutes(dueDate.getMinutes() + minutes);
+
+    return {
+      dueDate: dueDate.toISOString(),
+      dueTime: `${dueDate.getHours()}:${String(dueDate.getMinutes()).padStart(2, "0")}`,
+    };
+  }
 
   function speak(text) {
     const message = new SpeechSynthesisUtterance(text);
