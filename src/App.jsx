@@ -153,12 +153,52 @@ function App() {
   }
 
   function toggleTask(id) {
+    const taskToToggle = tasks.find((task) => task.id === id);
+
+    if (!taskToToggle) return;
+
+    if (!taskToToggle.done && taskToToggle.repeat) {
+      const nextDate = new Date(taskToToggle.dueDate || new Date());
+
+      if (taskToToggle.repeat === "daily") {
+        nextDate.setDate(nextDate.getDate() + 1);
+      }
+
+      if (taskToToggle.repeat === "weekly") {
+        nextDate.setDate(nextDate.getDate() + 7);
+      }
+
+      if (taskToToggle.repeat === "monthly") {
+        nextDate.setMonth(nextDate.getMonth() + 1);
+      }
+
+      const newTask = {
+        ...taskToToggle,
+        id: Date.now(),
+        done: false,
+        dueDate: nextDate.toISOString(),
+        reminded: false,
+      };
+
+      setTasks(
+        tasks
+          .map((task) =>
+            task.id === id ? { ...task, done: true } : task
+          )
+          .concat(newTask)
+      );
+
+      speak("Task completed. I created the next recurring reminder.");
+      return;
+    }
+
     setTasks(
       tasks.map((task) =>
         task.id === id ? { ...task, done: !task.done } : task
       )
     );
   }
+
 
   function deleteTask(id) {
     const taskToDelete = tasks.find((task) => task.id === id);
