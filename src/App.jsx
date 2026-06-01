@@ -523,6 +523,23 @@ function App() {
     })[0];
   }
 
+  function undoDelete() {
+      if (!lastDeletedTask) {
+        speak("There is no deleted task to restore.");
+        return;
+      }
+
+      setTasks((currentTasks) => [
+        ...currentTasks,
+        lastDeletedTask,
+      ]);
+
+      setLastDeletedTask(null);
+      localStorage.removeItem("lastDeletedTask");
+
+      speak("Task restored.");
+  }
+
   function speak(text) {
     const message = new SpeechSynthesisUtterance(text);
     message.lang = "en-IE";
@@ -596,6 +613,11 @@ function App() {
         accept="application/json"
         onChange={importTasks}
       />
+      {lastDeletedTask && (
+        <button onClick={undoDelete}>
+          Undo Delete
+        </button>
+      )}
       <TaskList 
         tasks={sortedTasks} 
         onToggleTask={toggleTask}
