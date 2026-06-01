@@ -12,7 +12,10 @@ function App() {
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
 
-  const [lastDeletedTask, setLastDeletedTask] = useState(null);
+  const [lastDeletedTask, setLastDeletedTask] = useState(() => {
+    const savedDeletedTask = localStorage.getItem("lastDeletedTask");
+    return savedDeletedTask ? JSON.parse(savedDeletedTask) : null;
+  });
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -73,11 +76,18 @@ function App() {
    const now = new Date();
    const dueDate = getTaskDateTime(task);
 
-   if (dueDate < now) return "Overdue";
-
-   if (dueDate.toDateString() === now.toDateString()) {
+   if (
+     dueDate.toDateString() === 
+     now.toDateString()
+    ) {
      return "Due today";
+    }
+
+   if (dueDate < now) {
+     return "Overdue";
    }
+
+   
 
    return "";
   }
@@ -247,6 +257,7 @@ function App() {
      }
 
      setTasks([...tasks, lastDeletedTask]);
+     localStorage.removeItem("lastDeletedTask");
      setLastDeletedTask(null);
      speak("I restored the task.");
      return;
@@ -288,6 +299,29 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes(
+        "what should i do next"
+      )
+    ) {
+      const task =
+        getRecommendedTask();
+
+      if (!task) {
+        speak(
+          "You have no active tasks."
+        );
+        return;
+      }
+
+      speak(
+        "I recommend " +
+          task.text
+      );
+
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -322,6 +356,7 @@ function App() {
     }
 
     setLastDeletedTask(matchingTask);
+    localStorage.setItem("lastDeletedTask", JSON.stringify(matchingTask));
     deleteTask(matchingTask.id);
     speak("I deleted " + matchingTask.text + ". Say undo to restore it.");
   }
@@ -438,6 +473,44 @@ function App() {
     }
 
     return "medium";
+  }
+
+  function getRecommendedTask() {
+    const activeTasks = tasks.filter(
+      (task) => !task.done
+    );
+
+    if (activeTasks.length === 0) {
+      return null;
+    }
+
+    const priorityScore = {
+      high: 3,
+      medium: 2,
+      low: 1,
+    };
+
+    return [...activeTasks].sort((a, b) => {
+      if (
+        priorityScore[a.priority] !==
+        priorityScore[b.priority]
+      ) {
+        return (
+          priorityScore[b.priority] -
+          priorityScore[a.priority]
+        );
+      }
+
+      const dateA =
+        getTaskDateTime(a) ||
+        new Date(9999, 0, 1);
+
+      const dateB =
+        getTaskDateTime(b) ||
+        new Date(9999, 0, 1);
+
+      return dateA - dateB;
+    })[0];
   }
 
   function speak(text) {
