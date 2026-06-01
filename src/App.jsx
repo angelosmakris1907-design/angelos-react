@@ -12,6 +12,8 @@ function App() {
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
 
+  const [lastDeletedTask, setLastDeletedTask] = useState(null);
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -187,6 +189,22 @@ function App() {
       return;
     }
 
+    if (
+     lowerText === "undo" ||
+     lowerText.includes("undo delete") ||
+     lowerText.includes("restore task")
+    ) {
+     if (!lastDeletedTask) {
+       speak("There is no deleted task to restore.");
+       return;
+     }
+
+     setTasks([...tasks, lastDeletedTask]);
+     setLastDeletedTask(null);
+     speak("I restored the task.");
+     return;
+    }
+
     addTask(text);
     speak("Task added: " + text);
   }
@@ -220,8 +238,9 @@ function App() {
       return;
     }
 
+    setLastDeletedTask(matchingTask);
     deleteTask(matchingTask.id);
-    speak("I deleted " + matchingTask.text + ".");
+    speak("I deleted " + matchingTask.text + ". Say undo to restore it.");
   }
 
   function getNextTask() {
