@@ -397,6 +397,11 @@ function App() {
     speak("You have " + overdueTasks.length + " overdue tasks. " + taskText);
   }
 
+  function clearCompletedTasks() {
+    setTasks(tasks.filter((task) => !task.done));
+    speak("I cleared all completed tasks.");
+  }
+
   function speak(text) {
     const message = new SpeechSynthesisUtterance(text);
     message.lang = "en-IE";
@@ -461,6 +466,9 @@ function App() {
       <TaskInput onAddTask={addTask} />
       <button onClick={exportTasks}>
         Export Tasks
+      </button>
+      <button onClick={clearCompletedTasks}>
+        Clear Completed Tasks
       </button>
       <input
         type="file"
