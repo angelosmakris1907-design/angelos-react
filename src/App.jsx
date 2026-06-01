@@ -244,6 +244,15 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes("what is overdue") ||
+      lowerText.includes("what tasks are overdue") ||
+      lowerText.includes("overdue tasks")
+    ) {
+      readOverdueTasks();
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -322,6 +331,28 @@ function App() {
       .join(". ");
 
     speak("You have " + dueTodayTasks.length + " tasks due today. " + taskText);
+  }
+
+  function readOverdueTasks() {
+    const now = new Date();
+
+    const overdueTasks = sortedTasks.filter((task) => {
+     if (!task.dueDate || task.done) return false;
+
+     const dueDate = getTaskDateTime(task);
+     return dueDate < now;
+    });
+
+    if (overdueTasks.length === 0) {
+      speak("You have no overdue tasks.");
+      return;
+    }
+
+    const taskText = overdueTasks
+     .map((task) => task.text)
+     .join(". ");
+
+    speak("You have " + overdueTasks.length + " overdue tasks. " + taskText);
   }
 
   function speak(text) {
