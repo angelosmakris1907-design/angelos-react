@@ -631,6 +631,25 @@ function App() {
       speak("Task restored.");
   }
 
+  function getReminderTasks() {
+    const now = new Date();
+
+    return tasks.filter((task) => {
+      if (!task.dueDate || task.done) return false;
+
+      const dueDate = getTaskDateTime(task);
+
+      const difference =
+        dueDate.getTime() - now.getTime();
+
+      return (
+        difference > 0 &&
+        difference <= 15 * 60 * 1000
+      );
+    });
+  }
+
+
   function speak(text) {
     const message = new SpeechSynthesisUtterance(text);
     message.lang = "en-IE";
@@ -687,9 +706,20 @@ function App() {
       return dateA - dateB;
     });
 
+  const reminderTasks = getReminderTasks();
+
   return (
     <main className="app">
       <Header />
+      {reminderTasks.length > 0 && (
+        <section>
+          <h2>Upcoming Soon</h2>
+
+          {reminderTasks.map((task) => (
+            <p key={task.id}>{task.text}</p>
+          ))}
+        </section>
+      )}
       <NextTask tasks={tasks} />
       <VoiceButton onVoiceInput={handleVoiceInput} />
       <TaskInput onAddTask={addTask} />
