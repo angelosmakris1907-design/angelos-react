@@ -92,6 +92,7 @@ function App() {
     };
 
     setTasks([...tasks, newTask]);
+    return newTask;
   }
 
   function toggleTask(id) {
@@ -121,6 +122,27 @@ function App() {
     );
   }
 
+  function buildConfirmation(task) {
+    let message = "I added " + task.text;
+
+    if (task.dueDate) {
+     const dueDate = new Date(task.dueDate);
+     const today = new Date();
+
+      if (dueDate.toDateString() === today.toDateString()) {
+        message += " for today";
+      } else {
+        message += " for tomorrow";
+      }
+    }
+
+     if (task.dueTime) {
+       message += " at " + task.dueTime;
+     }
+
+    return message + ".";
+  }
+
   function handleVoiceInput(text) {
     const lowerText = text.toLowerCase();
 
@@ -134,7 +156,7 @@ function App() {
       if (!nextTask) {
         speak("You have no active tasks.");
         return;
-     }
+      }
 
      speak("Your next task is " + nextTask.text);
      return;
@@ -205,8 +227,8 @@ function App() {
      return;
     }
 
-    addTask(text);
-    speak("Task added: " + text);
+    const task = addTask(text);
+    speak(buildConfirmation(task));
   }
 
   function completeTaskByName(taskName) {
