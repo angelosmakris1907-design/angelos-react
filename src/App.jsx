@@ -174,6 +174,19 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.startsWith("delete ") ||
+      lowerText.startsWith("remove ")
+    ) {
+      const taskName = lowerText
+        .replace("delete ", "")
+        .replace("remove ", "")
+        .trim();
+
+      deleteTaskByName(taskName);
+      return;
+    }
+
     addTask(text);
     speak("Task added: " + text);
   }
@@ -195,6 +208,20 @@ function App() {
     speak(
       matchingTask.text + " marked as complete."
     );
+  }
+
+  function deleteTaskByName(taskName) {
+    const matchingTask = tasks.find((task) =>
+      task.text.toLowerCase().includes(taskName)
+    );
+
+    if (!matchingTask) {
+      speak("I could not find that task.");
+      return;
+    }
+
+    deleteTask(matchingTask.id);
+    speak("I deleted " + matchingTask.text + ".");
   }
 
   function getNextTask() {
