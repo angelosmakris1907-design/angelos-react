@@ -64,6 +64,21 @@ function App() {
     return date;
   }
 
+  function getDueStatus(task) {
+   if (!task.dueDate) return "";
+
+   const now = new Date();
+   const dueDate = getTaskDateTime(task);
+
+   if (dueDate < now) return "Overdue";
+
+   if (dueDate.toDateString() === now.toDateString()) {
+     return "Due today";
+   }
+
+   return "";
+  }
+
   function addTask(text) {
     const newTask = {
       id: Date.now(),
@@ -124,6 +139,7 @@ function App() {
         onToggleTask={toggleTask}
         onDeleteTask={deleteTask} 
         onEditTask={editTask}
+        getDueStatus={getDueStatus}
       />
     </main>
   );

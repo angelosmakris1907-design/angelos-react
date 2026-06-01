@@ -1,4 +1,10 @@
-function TaskList({ tasks, onToggleTask, onDeleteTask, onEditTask }) {
+function TaskList({ 
+   tasks, 
+   onToggleTask, 
+   onDeleteTask, 
+   onEditTask, 
+   getDueStatus 
+  }) {
   return (
     <section>
       <h2>Your Tasks</h2>
@@ -7,7 +13,10 @@ function TaskList({ tasks, onToggleTask, onDeleteTask, onEditTask }) {
         <p>No tasks yet.</p>
       ) : (
         <ul>
-          {tasks.map((task) => (
+          {tasks.map((task) => {
+            const status = getDueStatus(task);
+
+            return (
             <li key={task.id}>
               <input
                 type="checkbox"
@@ -21,6 +30,11 @@ function TaskList({ tasks, onToggleTask, onDeleteTask, onEditTask }) {
                 }}
               >
                 {task.text}
+
+                {status && (
+                  <strong> {status}</strong>
+                )}
+
                 {task.dueDate && (
                   <small>
                     {" "}
@@ -28,8 +42,8 @@ function TaskList({ tasks, onToggleTask, onDeleteTask, onEditTask }) {
                   </small>
                 )}
 
-                {task.duetime && (
-                  <small> Time: {task.duetime}</small>
+                {task.dueTime && (
+                  <small> Time: {task.dueTime}</small>
                 )}
               </span>
 
@@ -49,7 +63,8 @@ function TaskList({ tasks, onToggleTask, onDeleteTask, onEditTask }) {
                 Delete
               </button>
             </li>
-          ))}
+            );
+          })}
         </ul>
       )}
     </section>
