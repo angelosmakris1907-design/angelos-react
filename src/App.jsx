@@ -85,10 +85,10 @@ function App() {
   function addTask(text) {
     const newTask = {
       id: Date.now(),
-      text: text,
+      text: cleanTaskText(text),
       done: false,
       dueDate: getDueDate(text),
-      duetime: getDueTime(text),
+      dueTime: getDueTime(text),
     };
 
     setTasks([...tasks, newTask]);
@@ -115,7 +115,7 @@ function App() {
             ...task, 
             text: newText, 
             dueDate: getDueDate(newText), 
-            duetime: getDueTime(newText) 
+            dueTime: getDueTime(newText) 
           } 
           : task
       )
@@ -141,6 +141,14 @@ function App() {
      }
 
     return message + ".";
+  }
+
+  function cleanTaskText(text) {
+    return text
+      .replace(/tomorrow/gi, "")
+      .replace(/today/gi, "")
+      .replace(/at \d{1,2}(:\d{2})?/gi, "")
+      .trim();
   }
 
   function handleVoiceInput(text) {
