@@ -235,6 +235,15 @@ function App() {
      return;
     }
 
+    if (
+      lowerText.includes("what do i have due today") ||
+      lowerText.includes("what is due today") ||
+      lowerText.includes("tasks due today")
+    ) {
+      readDueToday();
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -291,6 +300,28 @@ function App() {
       .join(". ");
 
     speak("Here are your tasks. " + taskText);
+  }
+
+  function readDueToday() {
+    const today = new Date();
+
+    const dueTodayTasks = sortedTasks.filter((task) => {
+      if (!task.dueDate || task.done) return false;
+
+      const dueDate = new Date(task.dueDate);
+      return dueDate.toDateString() === today.toDateString();
+    });
+
+    if (dueTodayTasks.length === 0) {
+      speak("You have no tasks due today.");
+      return;
+    }
+
+    const taskText = dueTodayTasks
+      .map((task) => task.text)
+      .join(". ");
+
+    speak("You have " + dueTodayTasks.length + " tasks due today. " + taskText);
   }
 
   function speak(text) {
