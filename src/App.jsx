@@ -120,8 +120,31 @@ function App() {
   }
 
   function handleVoiceInput(text) {
+    const lowerText = text.toLowerCase();
+
+    if (
+      lowerText.includes("what is my next task") ||
+      lowerText.includes("what's my next task") ||
+      lowerText.includes("what should i do")
+    ) {
+      const nextTask = getNextTask();
+
+      if (!nextTask) {
+        speak("You have no active tasks.");
+        return;
+     }
+
+     speak("Your next task is " + nextTask.text);
+     return;
+    }
+
     addTask(text);
     speak("Task added: " + text);
+  }
+
+  function getNextTask() {
+    const activeTasks = sortedTasks.filter((task) => !task.done);
+    return activeTasks.length > 0 ? activeTasks[0] : null;
   }
 
   function speak(text) {
