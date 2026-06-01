@@ -1,23 +1,54 @@
 function WeeklyAgenda({ tasks }) {
-    const activeTasks = tasks.filter((task) => !task.done && task.dueDate);
+     const today = new Date();
 
-    return (
-        <section>
-            <h2>Weekly Agenda</h2>
+     const tomorrow = new Date();
+     tomorrow.setDate(today.getDate() + 1);
 
-            {activeTasks.length === 0 ? (
-                <p>No scheduled tasks.</p>
-            ) : (
-                activeTasks.map((task) => (
-                    <p key={task.id}>
-                        {new Date(task.dueDate).toLocaleDateString()}{" "}
-                        {task.dueTime && task.dueTime + " - "}
-                        {task.text}
-                    </p>
-                ))
-            )}
-        </section>
-    );
+     const activeTasks = tasks.filter((task) => !task.done && task.dueDate);
+
+     const todayTasks = activeTasks.filter(
+         (task) => new Date(task.dueDate).toDateString() === today.toDateString()
+     );
+
+     const tomorrowTasks = activeTasks.filter(
+         (task) => new Date(task.dueDate).toDateString() === tomorrow.toDateString()
+     );
+
+     const laterTasks = activeTasks.filter((task) => {
+         const taskDate = new Date(task.dueDate).toDateString();
+
+         return (
+             taskDate !== today.toDateString() &&
+             taskDate !== tomorrow.toDateString()
+         );
+     });
+
+     function renderTasks(taskList) {
+         if (taskList.length === 0) return <p>None.</p>;
+
+         return taskList.map((task) => (
+             <p key={task.id}>
+                 {task.dueTime && task.dueTime + " - "}
+                 {task.text}
+             </p>
+         ));
+     }
+
+     return (
+         <section>
+             <h2>Weekly Agenda</h2>
+
+             <h3>Today</h3>
+             {renderTasks(todayTasks)}
+
+             <h3>Tomorrow</h3>
+             {renderTasks(tomorrowTasks)}
+
+             <h3>Later</h3>
+             {renderTasks(laterTasks)}
+         </section>
+     );
 }
 
 export default WeeklyAgenda;
+
