@@ -150,6 +150,11 @@ function App() {
       .replace(/tomorrow/gi, "")
       .replace(/today/gi, "")
       .replace(/at \d{1,2}(:\d{2})?/gi, "")
+      .replace(/urgent/gi, "")
+      .replace(/important/gi, "")
+      .replace(/high priority/gi, "")
+      .replace(/low priority/gi, "")
+      .replace(/not urgent/gi, "")
       .trim();
   }
 
