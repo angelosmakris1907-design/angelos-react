@@ -349,6 +349,14 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes("plan my day") ||
+      lowerText.includes("what is my plan today")
+    ) {
+      planMyDay();
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -410,6 +418,37 @@ function App() {
         " to " +
         newName
     );
+  }
+
+  function planMyDay() {
+    const today = new Date();
+
+    const todayTasks = sortedTasks.filter((task) => {
+      if (!task.dueDate || task.done) return false;
+
+      const dueDate = new Date(task.dueDate);
+      return dueDate.toDateString() === today.toDateString();
+    });
+
+    if (todayTasks.length === 0) {
+      speak("You have no tasks due today.");
+      return;
+    }
+
+    const highPriority = todayTasks.filter((task) => task.priority === "high");
+    const otherTasks = todayTasks.filter((task) => task.priority !== "high");
+
+    let message = "Here is your plan for today. ";
+
+    if (highPriority.length > 0) {
+      message += "Start with: " + highPriority.map((task) => task.text).join(". ") + ". ";
+    }
+
+    if (otherTasks.length > 0) {
+      message += "Then do: " + otherTasks.map((task) => task.text).join(". ") + ".";
+    }
+
+    speak(message);
   }
 
   function getNextTask() {
