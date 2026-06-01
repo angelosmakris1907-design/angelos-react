@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import NextTask from "./components/NextTask";
 import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
+import VoiceButton from "./components/VoiceButton";
 
 function App() {
   const [tasks, setTasks] = useState(() => {
@@ -118,6 +119,10 @@ function App() {
     );
   }
 
+  function handleVoiceInput(text) {
+    addTask(text);
+  }
+
   const sortedTasks = [...tasks].sort((a, b) => {
       const dateA = getTaskDateTime(a);
       const dateB = getTaskDateTime(b);
@@ -133,6 +138,7 @@ function App() {
     <main className="app">
       <Header />
       <NextTask tasks={tasks} />
+      <VoiceButton onVoiceInput={handleVoiceInput} />
       <TaskInput onAddTask={addTask} />
       <TaskList 
         tasks={sortedTasks} 
