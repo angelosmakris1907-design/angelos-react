@@ -46,6 +46,10 @@ function TaskList({
                 {task.dueTime && (
                   <small> Time: {task.dueTime}</small>
                 )}
+
+                {task.repeat && (
+                  <small>Repeats: {task.repeat}</small>
+                )}
               </span>
 
               <button

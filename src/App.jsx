@@ -114,6 +114,24 @@ function App() {
    return "";
   }
 
+  function getRepeat(text) {
+    const lowerText = text.toLowerCase();
+
+    if (lowerText.includes("every day") || lowerText.includes("daily")) {
+      return "daily";
+    }
+
+    if (lowerText.includes("every week") || lowerText.includes("weekly")) {
+      return "weekly";
+    }
+
+    if (lowerText.includes("every month") || lowerText.includes("monthly")) {
+      return "monthly";
+    }
+
+    return null;
+  }
+
   function addTask(text) {
 
     const relativeReminder = getRelativeReminder(text);
@@ -127,6 +145,7 @@ function App() {
       priority: getPriority(text),
       category: getCategory(text),
       reminded: false,
+      repeat: getRepeat(text),
     };
 
     setTasks([...tasks, newTask]);
@@ -166,6 +185,7 @@ function App() {
             dueTime: getDueTime(newText),
             priority: getPriority(newText), 
             category: getCategory(newText),
+            repeat: getRepeat(newText),
           } 
           : task
       )
@@ -195,6 +215,7 @@ function App() {
 
   function cleanTaskText(text) {
     return text
+      .replace(/remind me\s+/gi, "")
       .replace(/tomorrow/gi, "")
       .replace(/today/gi, "")
       .replace(/at \d{1,2}(:\d{2})?/gi, "")
@@ -203,8 +224,15 @@ function App() {
       .replace(/high priority/gi, "")
       .replace(/low priority/gi, "")
       .replace(/not urgent/gi, "")
-      .replace(/remind me in \d+ minutes to/gi, "")
-      .replace(/in \d+ minutes?/gi, "")
+      .replace(/in \d+ minutes?\s+to\s+/gi, "")
+      .replace(/in \d+ hours?\s+to\s+/gi, "")
+      .replace(/in \d+ hours?( and \d+ minutes?)?\s+to\s+/gi, "")
+      .replace(/every day/gi, "")
+      .replace(/daily/gi, "")
+      .replace(/every week/gi, "")
+      .replace(/weekly/gi, "")
+      .replace(/every month/gi, "")
+      .replace(/monthly/gi, "")
       .trim();
   }
 
@@ -219,7 +247,10 @@ function App() {
   }
 
   function handleVoiceInput(text) {
+
     const lowerText = text.toLowerCase();
+
+    console.log("Voice input received:", lowerText);
 
     if (
       lowerText.includes("what is my next task") ||
@@ -385,6 +416,14 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes("what do i have tomorrow") ||
+      lowerText.includes("what is tomorrow's schedule") 
+    ) {
+      readTomorrowTasks();
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -543,6 +582,35 @@ function App() {
     speak("You have " + overdueTasks.length + " overdue tasks. " + taskText);
   }
 
+  function readTomorrowTasks() {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const tomorrowTasks = tasks.filter((task) => {
+      if (!task.dueDate || task.done) return false;
+
+      const dueDate = new Date(task.dueDate);
+
+      return (
+        dueDate.toDateString() ===
+        tomorrow.toDateString()
+      );
+    });
+
+    if (tomorrowTasks.length === 0) {
+      speak("You have no tasks tomorrow.");
+      return;
+    }
+
+    const taskText = tomorrowTasks
+      .map((task) => task.text)
+      .join(". ");
+
+    speak(
+      "Tomorrow you have: " + taskText
+    );
+  }
+
   function readTasksByCategory(category) {
     const categoryTasks = sortedTasks.filter(
       (task) => task.category === category && !task.done
@@ -674,14 +742,21 @@ function App() {
 
   function getRelativeReminder(text) {
     const lowerText = text.toLowerCase();
-    const match = lowerText.match(/in (\d+) minutes?/);
 
-    if (!match) return null;
+    const hourMatch = lowerText.match(/(\d+) hours?/);
+    const minuteMatch = lowerText.match(/(\d+) minutes?/);
 
-    const minutes = Number(match[1]);
+    if (!hourMatch && !minuteMatch) return null;
+
     const dueDate = new Date();
 
-    dueDate.setMinutes(dueDate.getMinutes() + minutes);
+    if (hourMatch) {
+      dueDate.setHours(dueDate.getHours() + Number(hourMatch[1]));
+    }
+
+    if (minuteMatch) {
+      dueDate.setMinutes(dueDate.getMinutes() + Number(minuteMatch[1]));
+    }
 
     return {
       dueDate: dueDate.toISOString(),
