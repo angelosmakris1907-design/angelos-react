@@ -403,6 +403,19 @@ function App() {
     window.speechSynthesis.speak(message);
   }
 
+  function exportTasks() {
+    const data = JSON.stringify(tasks, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "angelos-tasks-backup.json";
+    link.click();
+
+    URL.revokeObjectURL(url);
+  }
+
   const sortedTasks = [...tasks].sort((a, b) => {
       const dateA = getTaskDateTime(a);
       const dateB = getTaskDateTime(b);
@@ -420,6 +433,9 @@ function App() {
       <NextTask tasks={tasks} />
       <VoiceButton onVoiceInput={handleVoiceInput} />
       <TaskInput onAddTask={addTask} />
+      <button onClick={exportTasks}>
+        Export Tasks
+      </button>
       <TaskList 
         tasks={sortedTasks} 
         onToggleTask={toggleTask}
