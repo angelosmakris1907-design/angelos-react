@@ -100,6 +100,7 @@ function App() {
       dueDate: getDueDate(text),
       dueTime: getDueTime(text),
       priority: getPriority(text),
+      category: getCategory(text),
     };
 
     setTasks([...tasks, newTask]);
@@ -138,6 +139,7 @@ function App() {
             dueDate: getDueDate(newText), 
             dueTime: getDueTime(newText),
             priority: getPriority(newText), 
+            category: getCategory(newText),
           } 
           : task
       )
@@ -332,6 +334,21 @@ function App() {
       return;
     }
 
+    if (lowerText.includes("study tasks")) {
+      readTasksByCategory("study");
+      return;
+    }
+
+    if (lowerText.includes("health tasks")) {
+      readTasksByCategory("health");
+      return;
+    }
+
+    if (lowerText.includes("shopping tasks")) {
+      readTasksByCategory("shopping");
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -457,6 +474,23 @@ function App() {
      .join(". ");
 
     speak("You have " + overdueTasks.length + " overdue tasks. " + taskText);
+  }
+
+  function readTasksByCategory(category) {
+    const categoryTasks = sortedTasks.filter(
+      (task) => task.category === category && !task.done
+    );
+
+    if (categoryTasks.length === 0) {
+      speak("You have no active " + category + " tasks.");
+      return;
+    }
+
+    const taskText = categoryTasks
+      .map((task) => task.text)
+      .join(". ");
+
+    speak("Your " + category + " tasks are: " + taskText);
   }
 
   function clearCompletedTasks() {
