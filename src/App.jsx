@@ -89,6 +89,7 @@ function App() {
       done: false,
       dueDate: getDueDate(text),
       dueTime: getDueTime(text),
+      priority: "medium"
     };
 
     setTasks([...tasks, newTask]);
@@ -113,7 +114,7 @@ function App() {
         task.id === id 
           ? { 
             ...task, 
-            text: newText, 
+            text: cleanTaskText(newText), 
             dueDate: getDueDate(newText), 
             dueTime: getDueTime(newText) 
           } 
@@ -149,6 +150,16 @@ function App() {
       .replace(/today/gi, "")
       .replace(/at \d{1,2}(:\d{2})?/gi, "")
       .trim();
+  }
+
+  function changePriority(id, priority) {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id
+          ? { ...task, priority }
+          : task
+      )
+    );
   }
 
   function handleVoiceInput(text) {
@@ -481,6 +492,7 @@ function App() {
         onDeleteTask={deleteTask} 
         onEditTask={editTask}
         getDueStatus={getDueStatus}
+        onChangePriority={changePriority}
       />
     </main>
   );

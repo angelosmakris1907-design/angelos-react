@@ -3,7 +3,8 @@ function TaskList({
    onToggleTask, 
    onDeleteTask, 
    onEditTask, 
-   getDueStatus 
+   getDueStatus, 
+   onChangePriority,
   }) {
   return (
     <section>
@@ -29,7 +30,7 @@ function TaskList({
                   textDecoration: task.done ? "line-through" : "none",
                 }}
               >
-                {task.text}
+                [{task.priority}] {task.text}
 
                 {status && (
                   <strong> {status}</strong>
@@ -57,6 +58,25 @@ function TaskList({
                 }}
               >
                 Edit
+              </button>
+
+              <button
+                onClick={() => {
+                  const priority = prompt(
+                    "Priority: high, medium or low",
+                    task.priority
+                  );
+
+                  if (
+                    priority === "high" ||
+                    priority === "medium" ||
+                    priority === "low"
+                  ) {
+                    onChangePriority(task.id, priority);
+                  }
+                }}
+              >
+                Priority
               </button>
 
               <button onClick={() => onDeleteTask(task.id)}>
