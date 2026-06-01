@@ -485,6 +485,24 @@ function App() {
     return "medium";
   }
 
+  function getCategory(text) {
+    const lowerText = text.toLowerCase();
+
+    if (lowerText.includes("study") || lowerText.includes("homework")) {
+      return "study";
+    }
+
+    if (lowerText.includes("doctor") || lowerText.includes("medicine")) {
+      return "health";
+    }
+
+    if (lowerText.includes("buy") || lowerText.includes("shopping")) {
+      return "shopping";
+    }
+
+    return "general";
+  }
+
   function getRecommendedTask() {
     const activeTasks = tasks.filter(
       (task) => !task.done
