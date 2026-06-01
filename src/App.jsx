@@ -253,6 +253,24 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.startsWith("rename ") &&
+      lowerText.includes(" to ")
+    ) {
+      const parts = lowerText
+        .replace("rename ", "")
+        .split(" to ");
+
+      if (parts.length === 2) {
+        editTaskByName(
+          parts[0].trim(),
+          parts[1].trim()
+        );
+      }
+
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -289,6 +307,30 @@ function App() {
     setLastDeletedTask(matchingTask);
     deleteTask(matchingTask.id);
     speak("I deleted " + matchingTask.text + ". Say undo to restore it.");
+  }
+
+  function editTaskByName(oldName, newName) {
+    const matchingTask = tasks.find(
+      (task) =>
+        task.text.toLowerCase().includes(oldName)
+    );
+
+    if (!matchingTask) {
+      speak("I could not find that task.");
+      return;
+    }
+
+    editTask(
+      matchingTask.id,
+      newName
+    );
+
+    speak(
+      "I renamed " +
+        oldName +
+        " to " +
+        newName
+    );
   }
 
   function getNextTask() {
