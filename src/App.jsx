@@ -146,8 +146,55 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes("how many tasks") ||
+      lowerText.includes("how many things do i have")
+    ) {
+      const activeCount = tasks.filter((task) => !task.done).length;
+      const completedCount = tasks.filter((task) => task.done).length;
+
+      speak(
+        `You have ${activeCount} active tasks and ${completedCount} completed tasks.`
+      );
+
+      return;
+    }
+
+    if (
+      lowerText.startsWith("mark ") &&
+      lowerText.includes(" complete")
+    ) {
+      const taskName = lowerText
+        .replace("mark ", "")
+        .replace(" complete", "")
+        .trim();
+
+      completeTaskByName(taskName);
+
+      return;
+    }
+
     addTask(text);
     speak("Task added: " + text);
+  }
+
+  function completeTaskByName(taskName) {
+    const matchingTask = tasks.find(
+      (task) =>
+        !task.done &&
+        task.text.toLowerCase().includes(taskName)
+    );
+
+    if (!matchingTask) {
+      speak("I could not find that task.");
+      return;
+    }
+
+    toggleTask(matchingTask.id);
+
+    speak(
+      matchingTask.text + " marked as complete."
+    );
   }
 
   function getNextTask() {
