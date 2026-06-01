@@ -416,6 +416,32 @@ function App() {
     URL.revokeObjectURL(url);
   }
 
+  function importTasks(event) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      try {
+        const importedTasks = JSON.parse(reader.result);
+
+        if (!Array.isArray(importedTasks)) {
+          alert("Invalid backup file.");
+          return;
+        }
+
+        setTasks(importedTasks);
+        speak("Tasks imported successfully.");
+      } catch {
+        alert("Could not import tasks.");
+      }
+    };
+
+    reader.readAsText(file);
+  }
+
   const sortedTasks = [...tasks].sort((a, b) => {
       const dateA = getTaskDateTime(a);
       const dateB = getTaskDateTime(b);
@@ -436,6 +462,11 @@ function App() {
       <button onClick={exportTasks}>
         Export Tasks
       </button>
+      <input
+        type="file"
+        accept="application/json"
+        onChange={importTasks}
+      />
       <TaskList 
         tasks={sortedTasks} 
         onToggleTask={toggleTask}
