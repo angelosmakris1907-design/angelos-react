@@ -407,6 +407,30 @@ function App() {
     }
 
     if (
+      lowerText.startsWith("edit note about ") &&
+      lowerText.includes(" to ")
+    ) {
+      const parts = lowerText
+        .replace("edit note about ", "")
+        .split(" to ");
+
+      if (parts.length === 2) {
+        editNoteBySearch(
+          parts[0].trim(),
+          parts[1].trim()
+        );
+      }
+
+      return;
+    }
+
+    if (lowerText.startsWith("delete note about ")) {
+      const searchTerm = lowerText.replace("delete note about ", "").trim();
+      deleteNoteBySearch(searchTerm);
+      return;
+    }
+
+    if (
       lowerText.startsWith("delete ") ||
       lowerText.startsWith("remove ")
     ) {
@@ -679,6 +703,19 @@ function App() {
     speak("Note deleted.");
   }
 
+  function deleteNoteBySearch(searchTerm) {
+    const matchingNote = notes.find((note) =>
+      note.text.toLowerCase().includes(searchTerm)
+    );
+
+    if (!matchingNote) {
+      speak("I could not find that note.");
+      return;
+    }
+
+    deleteNote(matchingNote.id);
+  }
+
   function editNote(id, newText) {
     setNotes(
       notes.map((note) =>
@@ -687,6 +724,19 @@ function App() {
     );
 
     speak("Note updated.");
+  }
+
+  function editNoteBySearch(searchTerm, newText) {
+    const matchingNote = notes.find((note) =>
+      note.text.toLowerCase().includes(searchTerm)
+    );
+
+    if (!matchingNote) {
+      speak("I could not find that note.");
+      return;
+    }
+
+    editNote(matchingNote.id, newText);
   }
 
   function planMyDay() {
