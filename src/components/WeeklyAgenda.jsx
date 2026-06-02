@@ -36,16 +36,19 @@ function WeeklyAgenda({ tasks }) {
 
      return (
          <section>
-             <h2>Weekly Agenda</h2>
+            <details>
+                <summary>Weekly Agenda</summary>
+                <h2>Weekly Agenda</h2>
 
-             <h3>Today</h3>
-             {renderTasks(todayTasks)}
+                <h3>Today</h3>
+                {renderTasks(todayTasks)}
 
-             <h3>Tomorrow</h3>
-             {renderTasks(tomorrowTasks)}
+                <h3>Tomorrow</h3>
+                {renderTasks(tomorrowTasks)}
 
-             <h3>Later</h3>
-             {renderTasks(laterTasks)}
+                <h3>Later</h3>
+                {renderTasks(laterTasks)}
+            </details>
          </section>
      );
 }
