@@ -126,25 +126,20 @@ function App() {
   }
 
   function getDueStatus(task) {
-   if (!task.dueDate) return "";
+    if (!task.dueDate) return "";
 
-   const now = new Date();
-   const dueDate = getTaskDateTime(task);
+    const now = new Date();
+    const dueDate = getTaskDateTime(task);
 
-   if (
-     dueDate.toDateString() === 
-     now.toDateString()
-    ) {
-     return "Due today";
+    if (dueDate < now) {
+      return "Overdue";
     }
 
-   if (dueDate < now) {
-     return "Overdue";
-   }
+    if (dueDate.toDateString() === now.toDateString()) {
+      return "Due today";
+    }
 
-   
-
-   return "";
+    return "";
   }
 
   function getRepeat(text) {
@@ -345,8 +340,6 @@ function App() {
   function handleVoiceInput(text) {
 
     const lowerText = text.toLowerCase();
-
-    console.log("Voice input received:", lowerText);
 
     if (
       lowerText.includes("what is my next task") ||
