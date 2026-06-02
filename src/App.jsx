@@ -18,6 +18,11 @@ function App() {
     return savedDeletedTask ? JSON.parse(savedDeletedTask) : null;
   });
 
+  const [categories, setCategories] = useState(() => {
+    const savedCategories = localStorage.getItem("categories");
+    return savedCategories ? JSON.parse(savedCategories) : ["general"];
+  });
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -43,6 +48,10 @@ function App() {
 
     return () => clearInterval(interval);
   }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem("categories", JSON.stringify(categories));
+  }, [categories]);
 
   function getDueDate(text) {
     const lowerText = text.toLowerCase();
@@ -151,6 +160,17 @@ function App() {
 
     setTasks([...tasks, newTask]);
     return newTask;
+  }
+
+  function addCategory(categoryName) {
+    const cleanName = categoryName.toLowerCase().trim();
+
+    if (!cleanName || categories.includes(cleanName)) {
+      return;
+    }
+
+    setCategories([...categories, cleanName]);
+    speak("Category " + cleanName + " created.");
   }
 
   function toggleTask(id) {
@@ -479,6 +499,12 @@ function App() {
       lowerText.includes("weekly agenda")
     ) {
       readAgenda();
+      return;
+    }
+
+    if (lowerText.startsWith("create category ")) {
+      const categoryName = lowerText.replace("create category ", "").trim();
+      addCategory(categoryName);
       return;
     }
 
