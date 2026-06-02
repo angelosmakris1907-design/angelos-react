@@ -597,6 +597,20 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes("read my notes") ||
+      lowerText.includes("what are my notes")
+    ) {
+      readNotes();
+      return;
+    }
+
+    if (lowerText.startsWith("search notes for ")) {
+      const searchTerm = lowerText.replace("search notes for ", "").trim();
+      searchNotes(searchTerm);
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -845,12 +859,39 @@ function App() {
     );
   }
 
+  function readNotes() {
+    if (notes.length === 0) {
+      speak("You have no notes.");
+      return;
+    }
+
+    const noteText = notes
+      .map((note) => note.text)
+      .join(". ");
+
+    speak("Your notes are: " + noteText);
+  }
+
   function detectCustomCategory(text) {
     const lowerText = text.toLowerCase();
 
     return categories.find((category) =>
       lowerText.includes(category)
     ) || getCategory(text);
+  }
+
+  function searchNotes(searchTerm) {
+    const results = notes.filter((note) =>
+      note.text.toLowerCase().includes(searchTerm)
+    );
+
+    if (results.length === 0) {
+      speak("I found no notes about " + searchTerm);
+      return;
+    }
+
+    const noteText = results.map((note) => note.text).join(". ");
+    speak("I found these notes: " + noteText);
   }
 
   function clearCompletedTasks() {
