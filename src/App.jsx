@@ -32,6 +32,8 @@ function App() {
     return savedNotes ? JSON.parse(savedNotes) : [];
   });
 
+  const [now, setNow] = useState(new Date());
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -75,6 +77,14 @@ function App() {
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   function getDueDate(text) {
     const lowerText = text.toLowerCase();
@@ -128,7 +138,7 @@ function App() {
   function getDueStatus(task) {
     if (!task.dueDate) return "";
 
-    const now = new Date();
+    const currentTime = now;
     const dueDate = getTaskDateTime(task);
 
     if (dueDate < now) {
