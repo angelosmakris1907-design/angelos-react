@@ -34,6 +34,8 @@ function App() {
 
   const [now, setNow] = useState(new Date());
 
+  const [taskSearchTerm, setTaskSearchTerm] = useState("");
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -1273,6 +1275,10 @@ function App() {
 
   const reminderTasks = getReminderTasks();
 
+  const visibleTasks = sortedTasks.filter((task) =>
+    task.text.toLowerCase().includes(taskSearchTerm.toLowerCase())
+  );
+
   return (
     <main className="app">
       <Header />
@@ -1324,8 +1330,14 @@ function App() {
           Undo Delete
         </button>
       )}
+      <input
+        type="text"
+        placeholder="Search tasks..."
+        value={taskSearchTerm}
+        onChange={(event) => setTaskSearchTerm(event.target.value)}
+      />
       <TaskList 
-        tasks={sortedTasks} 
+        tasks={visibleTasks} 
         onToggleTask={toggleTask}
         onDeleteTask={deleteTask} 
         onEditTask={editTask}
