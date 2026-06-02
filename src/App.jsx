@@ -992,6 +992,39 @@ function App() {
     };
   }
 
+  function morningBriefing() {
+    const today = new Date();
+
+    const todayTasks = tasks.filter((task) => {
+      if (!task.dueDate || task.done) return false;
+
+      return (
+        new Date(task.dueDate).toDateString() ===
+        today.toDateString()
+      );
+    });
+
+    if (todayTasks.length === 0) {
+      speak("Good morning. You have no tasks due today.");
+      return;
+    }
+
+    const nextTask = getRecommendedTask();
+
+    let message =
+      "Good morning. You have " +
+      todayTasks.length +
+      " tasks due today.";
+
+    if (nextTask) {
+      message +=
+        " Your next task is " +
+        nextTask.text + ".";
+    }
+
+    speak(message);
+  }
+
   function speak(text) {
     const message = new SpeechSynthesisUtterance(text);
     message.lang = "en-IE";
@@ -1065,6 +1098,9 @@ function App() {
       <NextTask tasks={tasks} />
       <WeeklyAgenda tasks={sortedTasks} />
       <CategoryList categories={categories} />
+      <button onClick={morningBriefing}>
+        Morning Briefing
+      </button>
       <VoiceButton onVoiceInput={handleVoiceInput} />
       <TaskInput onAddTask={addTask} />
       <button onClick={exportTasks}>
