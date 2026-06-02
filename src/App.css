@@ -7,9 +7,12 @@
 }
 
 input {
-  padding: 10px;
-  width: 250px;
-  margin-right: 10px;
+  width: 90%;
+  max-width: 500px;
+  padding: 16px;
+  font-size: 18px;
+  border-radius: 12px;
+  margin: 10px 0;
 }
 
 button {
