@@ -509,6 +509,19 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.startsWith("read my ") &&
+      lowerText.endsWith(" tasks")
+    ) {
+      const categoryName = lowerText
+        .replace("read my ", "")
+        .replace(" tasks", "")
+        .trim();
+
+      readTasksByCategory(categoryName);
+      return;
+    } 
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
