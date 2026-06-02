@@ -1031,9 +1031,13 @@ function App() {
       " tasks due today.";
 
     if (nextTask) {
-      message +=
-        " Your next task is " +
-        nextTask.text + ".";
+      message += " Your next task is " + nextTask.text;
+
+      if (nextTask.dueTime) {
+        message += " at " + nextTask.dueTime;
+      }
+
+      message += ".";
     }
 
     setBriefingText(message);
