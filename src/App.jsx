@@ -366,6 +366,12 @@ function App() {
       return;
     }
 
+    if (lowerText.startsWith("delete category ")) {
+      const categoryName = lowerText.replace("delete category ", "").trim();
+      deleteCategory(categoryName);
+      return;
+    }
+
     if (
       lowerText.startsWith("delete ") ||
       lowerText.startsWith("remove ")
@@ -852,6 +858,27 @@ function App() {
 
       return dateA - dateB;
     })[0];
+  }
+
+  function deleteCategory(categoryName) {
+    const cleanName = categoryName.toLowerCase().trim();
+
+    if (cleanName === "general") {
+      speak("The general category cannot be deleted.");
+      return;
+    }
+
+    setCategories(categories.filter((category) => category !== cleanName));
+
+    setTasks(
+      tasks.map((task) =>
+        task.category === cleanName
+          ? { ...task, category: "general" }
+          : task
+      )
+    );
+
+    speak("Category " + cleanName + " deleted.");
   }
 
   function undoDelete() {
