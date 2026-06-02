@@ -24,6 +24,8 @@ function App() {
     return savedCategories ? JSON.parse(savedCategories) : ["general"];
   });
 
+  const [briefingText, setBriefingText] = useState("");
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -63,8 +65,6 @@ function App() {
       localStorage.setItem("lastBriefingDate", todayKey);
     }
   }, []);
-
-
 
   function getDueDate(text) {
     const lowerText = text.toLowerCase();
@@ -1018,6 +1018,8 @@ function App() {
 
     if (todayTasks.length === 0) {
       speak("Good morning. You have no tasks due today.");
+      setBriefingText(message);
+      speak(message);
       return;
     }
 
@@ -1034,6 +1036,7 @@ function App() {
         nextTask.text + ".";
     }
 
+    setBriefingText(message);
     speak(message);
   }
 
@@ -1098,6 +1101,12 @@ function App() {
   return (
     <main className="app">
       <Header />
+      {briefingText && (
+        <section>
+          <h2>Briefing</h2>
+          <p>{briefingText}</p>
+        </section>
+      )}
       {reminderTasks.length > 0 && (
         <section>
           <h2>Upcoming Soon</h2>
