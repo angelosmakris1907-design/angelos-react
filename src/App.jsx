@@ -44,12 +44,25 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
+      console.log("All reminder candidates:", getReminderTasks());
+
       const reminderTasks = getReminderTasks().filter(
         (task) => !task.reminded
       );
 
+      console.log("Unrewinded reminder tasks:", reminderTasks);
+
       reminderTasks.forEach((task) => {
+
+        console.log("Reminder triggered:", task.text);
+
         speak("Reminder: " + task.text + " is coming up soon.");
+
+        if (Notification.permission === "granted") {
+          new Notification("Angelos Reminder", {
+            body: task.text,
+          });
+        }
         
         setTasks((currentTasks) =>
           currentTasks.map((currentTask) =>
@@ -1225,6 +1238,12 @@ function App() {
     window.speechSynthesis.speak(message);
   }
 
+  function requestNotificationPermission() {
+    if ("Notification" in window) {
+      Notification.requestPermission();
+    }
+  }
+
   function exportTasks() {
     const data = JSON.stringify(tasks, null, 2);
     const blob = new Blob([data], { type: "application/json" });
@@ -1307,6 +1326,9 @@ function App() {
           ))}
         </section>
       )}
+      <button onClick={requestNotificationPermission}>
+        Enable Notifications
+      </button>
       <NextTask tasks={tasks} />
       <WeeklyAgenda tasks={sortedTasks} />
       <CategoryList categories={categories} />
