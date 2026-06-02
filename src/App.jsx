@@ -54,6 +54,18 @@ function App() {
     localStorage.setItem("categories", JSON.stringify(categories));
   }, [categories]);
 
+  useEffect(() => {
+    const todayKey = new Date().toDateString();
+    const lastBriefingDate = localStorage.getItem("lastBriefingDate");
+
+    if (lastBriefingDate !== todayKey && tasks.length > 0) {
+      morningBriefing();
+      localStorage.setItem("lastBriefingDate", todayKey);
+    }
+  }, []);
+
+
+
   function getDueDate(text) {
     const lowerText = text.toLowerCase();
     const today = new Date();
