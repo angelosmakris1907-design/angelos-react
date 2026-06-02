@@ -154,7 +154,7 @@ function App() {
       dueDate: relativeReminder ? relativeReminder.dueDate : getDueDate(text),
       dueTime: relativeReminder ? relativeReminder.dueTime : getDueTime(text),
       priority: getPriority(text),
-      category: getCategory(text),
+      category: detectCustomCategory(text),
       reminded: false,
       repeat: getRepeat(text),
     };
@@ -246,7 +246,7 @@ function App() {
             dueDate: getDueDate(newText), 
             dueTime: getDueTime(newText),
             priority: getPriority(newText), 
-            category: getCategory(newText),
+            category: detectCustomCategory(newText),
             repeat: getRepeat(newText),
           } 
           : task
@@ -749,6 +749,14 @@ function App() {
       .join(". ");
 
     speak("Here is your agenda. " + taskText);
+  }
+
+  function detectCustomCategory(text) {
+    const lowerText = text.toLowerCase();
+
+    return categories.find((category) =>
+      lowerText.includes(category)
+    ) || getCategory(text);
   }
 
   function clearCompletedTasks() {
