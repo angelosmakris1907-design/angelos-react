@@ -38,7 +38,6 @@ function WeeklyAgenda({ tasks }) {
          <section>
             <details>
                 <summary>Weekly Agenda</summary>
-                <h2>Weekly Agenda</h2>
 
                 <h3>Today</h3>
                 {renderTasks(todayTasks)}

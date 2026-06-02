@@ -638,6 +638,19 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.startsWith("search tasks for ") ||
+      lowerText.startsWith("find task about ")
+    ) {
+      const searchTerm = lowerText
+        .replace("search tasks for ", "")
+        .replace("find task about ", "")
+        .trim();
+
+      searchTasks(searchTerm);
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -699,6 +712,21 @@ function App() {
         " to " +
         newName
     );
+  }
+
+  function searchTasks(searchTerm) {
+    const results = sortedTasks.filter((task) =>
+      task.text.toLowerCase().includes(searchTerm)
+    );
+
+    if (results.length === 0) {
+      speak("I found no tasks about " + searchTerm);
+      return;
+    }
+
+    const taskText = results.map((task) => task.text).join(". ");
+
+    speak("I found these tasks: " + taskText);
   }
 
   function deleteNote(id) {
