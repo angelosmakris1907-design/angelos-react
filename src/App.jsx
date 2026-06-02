@@ -674,6 +674,11 @@ function App() {
     );
   }
 
+  function deleteNote(id) {
+    setNotes(notes.filter((note) => note.id !== id));
+    speak("Note deleted.");
+  }
+
   function planMyDay() {
     const today = new Date();
 
@@ -1202,7 +1207,7 @@ function App() {
       <NextTask tasks={tasks} />
       <WeeklyAgenda tasks={sortedTasks} />
       <CategoryList categories={categories} />
-      <NotesList notes={notes} />
+      <NotesList notes={notes} onDeleteNote={deleteNote} />
       <button onClick={morningBriefing}>
         Morning Briefing
       </button>
