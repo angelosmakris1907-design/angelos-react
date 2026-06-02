@@ -7,6 +7,7 @@ import TaskList from "./components/TaskList";
 import VoiceButton from "./components/VoiceButton";
 import WeeklyAgenda from "./components/WeeklyAgenda";
 import CategoryList from "./components/CategoryList";
+import NotesList from "./components/NotesList";
 
 function App() {
   const [tasks, setTasks] = useState(() => {
@@ -25,6 +26,11 @@ function App() {
   });
 
   const [briefingText, setBriefingText] = useState("");
+
+  const [notes, setNotes] = useState(() => {
+    const savedNotes = localStorage.getItem("notes");
+    return savedNotes ? JSON.parse(savedNotes) : [];
+  });
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -65,6 +71,10 @@ function App() {
       localStorage.setItem("lastBriefingDate", todayKey);
     }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("notes", JSON.stringify(notes));
+  }, [notes]);
 
   function getDueDate(text) {
     const lowerText = text.toLowerCase();
@@ -184,6 +194,18 @@ function App() {
 
     setCategories([...categories, cleanName]);
     speak("Category " + cleanName + " created.");
+  }
+
+  function addNote(text) {
+    const newNote = {
+      id: Date.now(),
+      text,
+      createdAt: new Date().toISOString(),
+    };
+
+    setNotes((currentNotes) => [...currentNotes, newNote]);
+
+    speak("Note saved.");
   }
 
   function toggleTask(id) {
@@ -560,6 +582,18 @@ function App() {
       lowerText.includes("what can you do")
     ) {
       readHelp();
+      return;
+    }
+
+    if (
+      lowerText.startsWith("note ") ||
+      lowerText.startsWith("remember ")
+    ) {
+      const noteText = text
+        .replace(/^note\s+/i, "")
+        .replace(/^remember\s+/i, "");
+
+      addNote(noteText);
       return;
     }
 
@@ -1109,6 +1143,10 @@ function App() {
         <section>
           <h2>Briefing</h2>
           <p>{briefingText}</p>
+
+          <button onClick={() => setBriefingText("")}>
+            Clear Briefing
+          </button>
         </section>
       )}
       {reminderTasks.length > 0 && (
@@ -1123,6 +1161,7 @@ function App() {
       <NextTask tasks={tasks} />
       <WeeklyAgenda tasks={sortedTasks} />
       <CategoryList categories={categories} />
+      <NotesList notes={notes} />
       <button onClick={morningBriefing}>
         Morning Briefing
       </button>
