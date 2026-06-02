@@ -1,35 +1,34 @@
 function NotesList({ notes, onDeleteNote, onEditNote }) {
     return (
-        <details>
-            <summary>Notes</summary>
-                <section>
-                    <h2>Notes</h2>
+        <section>
+            <details>
+                <summary>Notes</summary>
 
-                    {notes.length === 0 ? (
-                        <p>No notes yet.</p>
-                    ) : (
-                        notes.map((note) => (
-                            <p key={note.id}>
-                                {note.text}
-                                <button onClick={() => onDeleteNote(note.id)}>
-                                    Delete
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        const newText = prompt("Edit note:", note.text);
+                {notes.length === 0 ? (
+                    <p>No notes yet.</p>
+                ) : (
+                    notes.map((note) => (
+                        <p key={note.id}>
+                            {note.text}
+                            <button onClick={() => onDeleteNote(note.id)}>
+                                Delete
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const newText = prompt("Edit note:", note.text);
 
-                                        if (newText && newText.trim() !== "") {
-                                            onEditNote(note.id, newText.trim());
-                                        }
-                                    }}
-                                >
-                                    Edit
-                                </button>
-                            </p>
-                        ))
-                    )}
-                </section>
-        </details>
+                                    if (newText && newText.trim() !== "") {
+                                        onEditNote(note.id, newText.trim());
+                                    }
+                                }}
+                            >
+                                Edit
+                            </button>
+                        </p>
+                    ))
+                )}
+            </details>
+        </section>
     );
 }
 
