@@ -24,7 +24,9 @@ function VoiceButton({ onVoiceInput }) {
     };
   }
 
-  return <button onClick={startListening}>🎤 Speak</button>;
+  return <button className="voice-button" onClick={startListening}>
+     🎤 Speak
+    </button>;
 }
 
 export default VoiceButton;

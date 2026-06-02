@@ -543,6 +543,14 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes("help") ||
+      lowerText.includes("what can you do")
+    ) {
+      readHelp();
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -783,6 +791,12 @@ function App() {
       .join(". ");
 
     speak("Here is your agenda. " + taskText);
+  }
+
+  function readHelp() {
+    speak(
+      "I can add tasks, edit tasks, delete tasks, manage categories, read your agenda, tell you what is due today, tomorrow, or overdue, create reminders, and manage recurring tasks."
+    );
   }
 
   function detectCustomCategory(text) {
