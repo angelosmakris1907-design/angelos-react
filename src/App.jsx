@@ -44,13 +44,10 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log("All reminder candidates:", getReminderTasks());
 
       const reminderTasks = getReminderTasks().filter(
         (task) => !task.reminded
       );
-
-      console.log("Unrewinded reminder tasks:", reminderTasks);
 
       reminderTasks.forEach((task) => {
 
@@ -334,6 +331,7 @@ function App() {
   function cleanTaskText(text) {
     return text
       .replace(/remind me\s+/gi, "")
+      .replace(/remind me to\s+/gi, "")
       .replace(/tomorrow/gi, "")
       .replace(/today/gi, "")
       .replace(/at \d{1,2}(:\d{2})?/gi, "")
