@@ -473,6 +473,15 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes("read my agenda") ||
+      lowerText.includes("what is my agenda") ||
+      lowerText.includes("weekly agenda")
+    ) {
+      readAgenda();
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -692,6 +701,27 @@ function App() {
       .join(". ");
 
     speak("Your recurring tasks are: " + taskText);
+  }
+
+  function readAgenda() {
+    const activeScheduledTasks = sortedTasks.filter(
+      (task) => !task.done && task.dueDate
+    );
+
+    if (activeScheduledTasks.length === 0) {
+      speak("You have no scheduled tasks.");
+      return;
+    }
+
+    const taskText = activeScheduledTasks
+      .map((task) => {
+        const date = new Date(task.dueDate).toLocaleDateString();
+        const time = task.dueTime ? task.dueTime + " " : "";
+        return date + " " + time + task.text;
+      })
+      .join(". ");
+
+    speak("Here is your agenda. " + taskText);
   }
 
   function clearCompletedTasks() {
