@@ -36,6 +36,8 @@ function App() {
 
   const [taskSearchTerm, setTaskSearchTerm] = useState("");
 
+  const [noteSearchTerm, setNoteSearchTerm] = useState("");
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -1279,6 +1281,10 @@ function App() {
     task.text.toLowerCase().includes(taskSearchTerm.toLowerCase())
   );
 
+  const visibleNotes = notes.filter((note) =>
+    note.text.toLowerCase().includes(noteSearchTerm.toLowerCase())
+  );
+
   return (
     <main className="app">
       <Header />
@@ -1304,8 +1310,14 @@ function App() {
       <NextTask tasks={tasks} />
       <WeeklyAgenda tasks={sortedTasks} />
       <CategoryList categories={categories} />
+      <input
+        type="text"
+        placeholder="Search notes..."
+        value={noteSearchTerm}
+        onChange={(event) => setNoteSearchTerm(event.target.value)}
+      />
       <NotesList 
-        notes={notes} 
+        notes={visibleNotes} 
         onDeleteNote={deleteNote}
         onEditNote={editNote} 
       />
