@@ -34,3 +34,9 @@
 - Say: read my agenda
 - Expected: scheduled tasks are read aloud
 - Status: Pass
+
+## Overdue Status
+- Add a task due 1-2 minutes from now.
+- Expected before time passes: Due today.
+- Expected after time passes: Overdue.
+- Status: Pass
