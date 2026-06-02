@@ -679,6 +679,16 @@ function App() {
     speak("Note deleted.");
   }
 
+  function editNote(id, newText) {
+    setNotes(
+      notes.map((note) =>
+        note.id === id ? { ...note, text: newText } : note
+      )
+    );
+
+    speak("Note updated.");
+  }
+
   function planMyDay() {
     const today = new Date();
 
@@ -1207,7 +1217,11 @@ function App() {
       <NextTask tasks={tasks} />
       <WeeklyAgenda tasks={sortedTasks} />
       <CategoryList categories={categories} />
-      <NotesList notes={notes} onDeleteNote={deleteNote} />
+      <NotesList 
+        notes={notes} 
+        onDeleteNote={deleteNote}
+        onEditNote={editNote} 
+      />
       <button onClick={morningBriefing}>
         Morning Briefing
       </button>
