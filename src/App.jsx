@@ -528,6 +528,21 @@ function App() {
       return;
     } 
 
+    if (
+      lowerText.startsWith("move ") &&
+      lowerText.includes(" to ")
+    ) {
+      const parts = lowerText
+        .replace("move ", "")
+        .split(" to ");
+
+      if (parts.length === 2) {
+        moveTaskToCategory(parts[0].trim(), parts[1].trim());
+      }
+
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -879,6 +894,34 @@ function App() {
     );
 
     speak("Category " + cleanName + " deleted.");
+  }
+
+  function moveTaskToCategory(taskName, categoryName) {
+    const cleanCategory = categoryName.toLowerCase().trim();
+
+    if (!categories.includes(cleanCategory)) {
+      speak("I could not find the category " + cleanCategory);
+      return;
+    }
+
+    const matchingTask = tasks.find((task) =>
+      task.text.toLowerCase().includes(taskName)
+    );
+
+    if (!matchingTask) {
+      speak("I could not find that task.");
+      return;
+    }
+
+    setTasks(
+      tasks.map((task) =>
+        task.id === matchingTask.id
+          ? { ...task, category: cleanCategory }
+          : task
+      )
+    );
+
+    speak("I moved " + matchingTask.text + " to " + cleanCategory);
   }
 
   function undoDelete() {
