@@ -330,6 +330,8 @@ function App() {
 
   function cleanTaskText(text) {
     return text
+      .replace(/remind me tomorrow to\s+/gi, "")
+      .replace(/remind me today to\s+/gi, "")
       .replace(/remind me\s+/gi, "")
       .replace(/remind me to\s+/gi, "")
       .replace(/tomorrow/gi, "")
