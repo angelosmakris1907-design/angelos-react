@@ -351,6 +351,8 @@ function App() {
       .replace(/high priority/gi, "")
       .replace(/low priority/gi, "")
       .replace(/not urgent/gi, "")
+      .replace(/in one minute\s+to\s+/gi, "")
+      .replace(/in one hour\s+to\s+/gi, "")
       .replace(/in \d+ minutes?\s+to\s+/gi, "")
       .replace(/in \d+ hours?\s+to\s+/gi, "")
       .replace(/in \d+ hours?( and \d+ minutes?)?\s+to\s+/gi, "")
@@ -1215,8 +1217,13 @@ function App() {
   function getRelativeReminder(text) {
     const lowerText = text.toLowerCase();
 
-    const hourMatch = lowerText.match(/(\d+) hours?/);
-    const minuteMatch = lowerText.match(/(\d+) minutes?/);
+    const normalizedText = lowerText
+      .replace("one minute", "1 minute")
+      .replace("one hour", "1 hour");
+
+
+    const hourMatch = normalizedText.match(/(\d+) hours?/);
+    const minuteMatch = normalizedText.match(/(\d+) minutes?/);
 
     if (!hourMatch && !minuteMatch) return null;
 
@@ -1238,9 +1245,12 @@ function App() {
 
   function getRelativeTimeText(text) {
     const lowerText = text.toLowerCase();
+    const normalizedText = lowerText
+      .replace("one minute", "1 minute")
+      .replace("one hour", "1 hour");
 
-    const hourMatch = lowerText.match(/(\d+) hours?/);
-    const minuteMatch = lowerText.match(/(\d+) minutes?/);
+    const hourMatch = normalizedText.match(/(\d+) hours?/);
+    const minuteMatch = normalizedText.match(/(\d+) minutes?/);
 
     if (!hourMatch && !minuteMatch) return null;
 
