@@ -8,6 +8,7 @@ import VoiceButton from "./components/VoiceButton";
 import WeeklyAgenda from "./components/WeeklyAgenda";
 import CategoryList from "./components/CategoryList";
 import NotesList from "./components/NotesList";
+import TodayDashboard from "./components/TodayDashboard";
 
 function App() {
   const [tasks, setTasks] = useState(() => {
@@ -198,6 +199,7 @@ function App() {
       category: detectCustomCategory(text),
       reminded: false,
       repeat: getRepeat(text),
+      relativeText: getRelativeTimeText(text),
     };
 
     setTasks([...tasks, newTask]);
@@ -310,6 +312,10 @@ function App() {
   function buildConfirmation(task) {
     let message = "I added " + task.text;
 
+    if (task.relativeText) {
+      return "I added " + task.text + " " + task.relativeText + ".";
+    }
+
     if (task.dueDate) {
      const dueDate = new Date(task.dueDate);
      const today = new Date();
@@ -328,12 +334,14 @@ function App() {
     return message + ".";
   }
 
+  
+
   function cleanTaskText(text) {
     return text
       .replace(/remind me tomorrow to\s+/gi, "")
       .replace(/remind me today to\s+/gi, "")
-      .replace(/remind me\s+/gi, "")
       .replace(/remind me to\s+/gi, "")
+      .replace(/remind me\s+/gi, "")
       .replace(/tomorrow/gi, "")
       .replace(/today/gi, "")
       .replace(/at \d{1,2}(:\d{2})?/gi, "")
@@ -1192,6 +1200,27 @@ function App() {
     };
   }
 
+  function getRelativeTimeText(text) {
+    const lowerText = text.toLowerCase();
+
+    const hourMatch = lowerText.match(/(\d+) hours?/);
+    const minuteMatch = lowerText.match(/(\d+) minutes?/);
+
+    if (!hourMatch && !minuteMatch) return null;
+
+    let parts = [];
+
+    if (hourMatch) {
+      parts.push(hourMatch[1] + " hour" + (hourMatch[1] === "1" ? "" : "s"));
+    }
+
+    if (minuteMatch) {
+      parts.push(minuteMatch[1] + " minute" + (minuteMatch[1] === "1" ? "" : "s"));
+    }
+
+    return "in " + parts.join(" and ");
+  }
+
   function morningBriefing() {
     const today = new Date();
 
@@ -1332,6 +1361,11 @@ function App() {
       <NextTask tasks={tasks} />
       <WeeklyAgenda tasks={sortedTasks} />
       <CategoryList categories={categories} />
+      <TodayDashboard 
+        tasks={sortedTasks}
+        notes={notes}
+        getDueStatus={getDueStatus}
+      />
       <input
         type="text"
         placeholder="Search notes..."
