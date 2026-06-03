@@ -200,6 +200,7 @@ function App() {
       reminded: false,
       repeat: getRepeat(text),
       relativeText: getRelativeTimeText(text),
+      createdAt: new Date().toISOString(),
     };
 
     setTasks([...tasks, newTask]);
@@ -676,6 +677,14 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes("what's new today") ||
+      lowerText.includes("what is new today")
+    ) {
+      readWhatsNewToday();
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -991,6 +1000,31 @@ function App() {
       .join(". ");
 
     speak("Your notes are: " + noteText);
+  }
+
+  function readWhatsNewToday() {
+    const today = new Date().toDateString();
+
+    const todayTasks = tasks.filter(
+      (task) =>
+        task.createdAt &&
+        new Date(task.createdAt).toDateString() === today
+    );
+
+    const todayNotes = notes.filter(
+      (note) =>
+        note.createdAt &&
+        new Date(note.createdAt).toDateString() === today
+    );
+
+    let message =
+      "Today you added " +
+      todayTasks.length +
+      " tasks and " +
+      todayNotes.length +
+      " notes.";
+
+    speak(message);
   }
 
   function detectCustomCategory(text) {
@@ -1358,7 +1392,6 @@ function App() {
       <button onClick={requestNotificationPermission}>
         Enable Notifications
       </button>
-      <NextTask tasks={tasks} />
       <WeeklyAgenda tasks={sortedTasks} />
       <CategoryList categories={categories} />
       <TodayDashboard 
