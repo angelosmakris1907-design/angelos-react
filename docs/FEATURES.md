@@ -1,30 +1,32 @@
 # Angelos Features
 
-## Core Tasks
-- Add tasks
-- Edit tasks
-- Delete tasks
-- Complete tasks
+## Core
+- Add, edit, delete, complete tasks
 - Undo delete
+- Save tasks locally
+- Import/export backup
 
-## Voice Assistant
+## Voice
 - Add tasks by voice
 - Read tasks aloud
-- Ask for next task
 - Ask what to do next
-- Ask what is due today
-- Ask what is due tomorrow
-- Ask what is overdue
+- Ask what is due today/tomorrow/overdue
 
 ## Reminders
-- Due dates
-- Due times
-- Relative reminders
+- Due dates and times
+- Relative reminders: “in 10 minutes”
 - Automatic voice reminders
-- Upcoming Soon section
+- Browser notifications
 
 ## Organisation
 - Priorities
 - Categories
-- Recurring tasks
-- Import/export backup
+- Custom categories
+- Weekly agenda
+- Today dashboard
+
+## Notes
+- Create notes
+- Read notes
+- Search notes
+- Edit/delete notes

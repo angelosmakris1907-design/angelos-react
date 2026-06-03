@@ -1,36 +1,29 @@
 # Angelos Voice Commands
 
 ## Tasks
-- What is my next task? (Pass)
-- What should I do next? (Pass)
-- Read my tasks (Pass)
-- How many tasks do I have? (Pass)
-- Mark [task] complete (Pass)
-- Delete [task] (Pass)
-- Undo (Pass)
+- Read my tasks
+- What is my next task?
+- What should I do next?
+- How many tasks do I have?
+- Mark [task] complete
+- Delete [task]
+- Undo
 
-## Dates and Agenda
-- What do I have today? (Pass)
-- What do I have tomorrow? (Pass)
-- What is overdue? (Pass)
-- Read my agenda (Pass)
-- Plan my day (Pass)
+## Agenda
+- Plan my day
+- Read my agenda
+- What do I have tomorrow?
+- What is overdue?
 
 ## Categories
-- Create category [name] (Pass)
-- Delete category [name] (Pass)
-- Read my [category] tasks (Pass)
-- Move [task] to [category] (Pass)
+- Create category [name]
+- Delete category [name]
+- Read my [category] tasks
+- Move [task] to [category]
 
 ## Notes
-- Remember [note] (Pass)
-- Note [note] (Pass)
-- Read my notes (Pass)
-- Search notes for [word] (Pass)
-- Edit note about [word] to [new note] (Pass)
-- Delete note about [word] (Pass)
-
-## Reminders
-- Remind me in 10 minutes to [task] (Pass)
-- Remind me in 2 hours to [task] (Pass)
-- Remind me in 2 hours and 30 minutes to [task] (Pass)
+- Remember [note]
+- Read my notes
+- Search notes for [word]
+- Edit note about [word] to [new note]
+- Delete note about [word]

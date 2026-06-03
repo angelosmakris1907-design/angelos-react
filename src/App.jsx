@@ -419,10 +419,12 @@ function App() {
       lowerText.startsWith("mark ") &&
       lowerText.includes(" complete")
     ) {
-      const taskName = lowerText
-        .replace("mark ", "")
-        .replace(" complete", "")
-        .trim();
+      const taskName = cleanTaskText(
+        lowerText
+          .replace("mark ", "")
+          .replace(" complete", "")
+          .trim()
+      );
 
       completeTaskByName(taskName);
 
