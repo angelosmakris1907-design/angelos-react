@@ -689,6 +689,14 @@ function App() {
       return;
     }
 
+    if (
+      lowerText.includes("update briefing") ||
+      lowerText.includes("refresh briefing")
+    ) {
+      morningBriefing();
+      return;
+    }
+
     const task = addTask(text);
     speak(buildConfirmation(task));
   }
@@ -1280,7 +1288,7 @@ function App() {
     });
 
     if (todayTasks.length === 0) {
-      speak("Good morning. You have no tasks due today.");
+      const message = "Good morning. You have no tasks due today.";
       setBriefingText(message);
       speak(message);
       return;
