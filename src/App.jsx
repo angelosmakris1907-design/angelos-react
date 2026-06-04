@@ -44,6 +44,16 @@ function App() {
     return saved ? JSON.parse(saved) : true;
   });
 
+  const [automaticBriefingEnabled, setAutomaticBriefingEnabled] = useState(() => {
+    const saved = localStorage.getItem("automaticBriefingEnabled");
+    return saved ? JSON.parse(saved) : true;
+  });
+
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    const saved = localStorage.getItem("notificationsEnabled");
+    return saved ? JSON.parse(saved) : true;
+  });
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -65,7 +75,10 @@ function App() {
 
         speak("Reminder: " + task.text + " is coming up soon.");
 
-        if (Notification.permission === "granted") {
+        if (
+          notificationsEnabled &&
+          Notification.permission === "granted"
+        ) {
           new Notification("Angelos Reminder", {
             body: task.text,
           });
@@ -92,7 +105,11 @@ function App() {
     const todayKey = new Date().toDateString();
     const lastBriefingDate = localStorage.getItem("lastBriefingDate");
 
-    if (lastBriefingDate !== todayKey && tasks.length > 0) {
+    if (
+      automaticBriefingEnabled &&
+      lastBriefingDate !== todayKey &&
+      tasks.length > 0
+    ) {
       morningBriefing();
       localStorage.setItem("lastBriefingDate", todayKey);
     }
@@ -109,6 +126,20 @@ function App() {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "notificationsEnabled",
+      JSON.stringify(notificationsEnabled)
+    );
+  }, [notificationsEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "automaticBriefingEnabled",
+      JSON.stringify(automaticBriefingEnabled)
+    );
+  }, [automaticBriefingEnabled]);
 
   function getDueDate(text) {
     const lowerText = text.toLowerCase();
@@ -1422,14 +1453,40 @@ function App() {
       <button onClick={requestNotificationPermission}>
         Enable Notifications
       </button>
-      <label>
-        <input
-          type="checkbox"
-          checked={voiceEnabled}
-          onChange={() => setVoiceEnabled(!voiceEnabled)}
-        />
-        Voice Enabled
-      </label>
+      <section>
+        <details>
+          <summary>Settings</summary>
+            <div className="settings">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={voiceEnabled}
+                  onChange={() => setVoiceEnabled(!voiceEnabled)}
+                />
+                Voice Enabled
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  checked={notificationsEnabled}
+                  onChange={() => setNotificationsEnabled(!notificationsEnabled)}
+                />
+                Notifications Enabled
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={automaticBriefingEnabled}
+                  onChange={() =>
+                    setAutomaticBriefingEnabled(!automaticBriefingEnabled)
+                  }
+                />
+                Automatic Briefing
+              </label>
+            </div>
+        </details>
+      </section>
       <WeeklyAgenda tasks={sortedTasks} />
       <CategoryList categories={categories} />
       <TodayDashboard 

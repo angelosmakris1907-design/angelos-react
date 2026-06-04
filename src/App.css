@@ -29,3 +29,15 @@ button {
   border-radius: 20px;
   margin: 20px 0;
 }
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
