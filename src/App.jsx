@@ -39,11 +39,18 @@ function App() {
 
   const [noteSearchTerm, setNoteSearchTerm] = useState("");
 
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [voiceEnabled, setVoiceEnabled] = useState(() => {
+    const saved = localStorage.getItem("voiceEnabled");
+    return saved ? JSON.parse(saved) : true;
+  });
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem("voiceEnabled", JSON.stringify(voiceEnabled));
+  }, [voiceEnabled]);
 
   useEffect(() => {
     const interval = setInterval(() => {
