@@ -39,6 +39,8 @@ function App() {
 
   const [noteSearchTerm, setNoteSearchTerm] = useState("");
 
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -1316,9 +1318,10 @@ function App() {
   }
 
   function speak(text) {
-    const message = new SpeechSynthesisUtterance(text);
-    message.lang = "en-IE";
-    window.speechSynthesis.speak(message);
+    if (!voiceEnabled) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(utterance);
   }
 
   function requestNotificationPermission() {
@@ -1412,6 +1415,14 @@ function App() {
       <button onClick={requestNotificationPermission}>
         Enable Notifications
       </button>
+      <label>
+        <input
+          type="checkbox"
+          checked={voiceEnabled}
+          onChange={() => setVoiceEnabled(!voiceEnabled)}
+        />
+        Voice Enabled
+      </label>
       <WeeklyAgenda tasks={sortedTasks} />
       <CategoryList categories={categories} />
       <TodayDashboard 
