@@ -1431,6 +1431,18 @@ function App() {
   return (
     <main className="app">
       <Header />
+      <section>
+        <details>
+          <summary>About Angelos</summary>
+
+          <p>Version: 0.9 MVP</p>
+
+          <p>
+            Angelos is a voice-first planner designed to help
+            people organise their tasks, reminders and notes.
+          </p>
+        </details>
+      </section>
       {briefingText && (
         <section>
           <h2>Briefing</h2>
