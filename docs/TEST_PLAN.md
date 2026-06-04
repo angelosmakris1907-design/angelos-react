@@ -1,42 +1,31 @@
 # Angelos Test Plan
 
-## Voice Add Task
-- Say: urgent study chemistry tomorrow at 6
-- Expected: task added, high priority, due tomorrow, time 6:00
-- Status: Pass
+## Core
+- Add task 
+- Edit task 
+- Delete task 
+- Undo after refresh 
+- Complete recurring task 
 
-## Relative Reminder
-- Say: remind me in 10 minutes to call George
-- Expected: task added and appears in Upcoming Soon
-- Status: Pass
+## Voice
+- Add task by voice 
+- Read tasks 
+- Ask what to do next 
+- Ask what is due tomorrow 
+
+## Reminders
+- Add reminder in 2 minutes 
+- Check Upcoming Soon
+- Check voice reminder
+- Check browser notification
+
+## Notes
+- Create note
+- Search note
+- Edit note
+- Delete note
 
 ## Categories
-- Say: create category university
-- Say: move chemistry to university
-- Say: read my university tasks
-- Expected: task is moved and read aloud
-- Status: Pass
-
-## Delete and Undo
-- Delete a task manually
-- Refresh page
-- Click Undo Delete
-- Expected: task restored
-- Status: Pass
-
-## Recurring Task
-- Say: take medication every day at 9
-- Complete it
-- Expected: new task created for tomorrow
-- Status: Pass
-
-## Agenda
-- Say: read my agenda
-- Expected: scheduled tasks are read aloud
-- Status: Pass
-
-## Overdue Status
-- Add a task due 1-2 minutes from now.
-- Expected before time passes: Due today.
-- Expected after time passes: Overdue.
-- Status: Pass
+- Create category
+- Move task to category
+- Read category tasks

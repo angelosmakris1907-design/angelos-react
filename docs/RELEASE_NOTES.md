@@ -1,7 +1,7 @@
 # Angelos MVP v1.0 Release Notes
 
 ## Version
-0.9 MVP
+1.0 MVP
 
 ## What Angelos Does
 Angelos is a voice-first planner that helps users manage tasks, reminders, notes, categories, and daily planning.

@@ -1435,7 +1435,7 @@ function App() {
         <details>
           <summary>About Angelos</summary>
 
-          <p>Version: 0.9 MVP</p>
+          <p>Version: 1.0 MVP</p>
 
           <p>
             Angelos is a voice-first planner designed to help
