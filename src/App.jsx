@@ -153,8 +153,21 @@ function App() {
     if (
       lowerText.includes("today") ||
       lowerText.includes("later today") ||
-      lowerText.includes("this evening")
+      lowerText.includes("this evening") ||
+      lowerText.includes("this morning") ||
+      lowerText.includes("this afternoon") ||
+      lowerText.includes("tonight") 
     ) {
+      return today.toISOString();
+    }
+
+    if (
+      lowerText.includes("tomorrow morning") ||
+      lowerText.includes("tomorrow afternoon") ||
+      lowerText.includes("tomorrow evening") ||
+      lowerText.includes("tomorrow night")
+    ) {
+      today.setDate(today.getDate() + 1);
       return today.toISOString();
     }
 
@@ -170,6 +183,34 @@ function App() {
 
     if (lowerText.includes("this evening")) {
       return "19:00";
+    }
+
+    if (lowerText.includes("this morning")) {
+      return "09:00";
+    }
+
+    if (lowerText.includes("this afternoon")) {
+      return "15:00";
+    }
+
+    if (lowerText.includes("tonight")) {
+      return "21:00";
+    }
+
+    if (lowerText.includes("tomorrow morning")) {
+      return "09:00";
+    }
+
+    if (lowerText.includes("tomorrow afternoon")) {
+      return "15:00";
+    }
+
+    if (lowerText.includes("tomorrow evening")) {
+      return "19:00";
+    }
+
+    if (lowerText.includes("tomorrow night")) {
+      return "21:00";
     }
 
     const match = lowerText.match(/at (\d{1,2})(:\d{2})?/);
@@ -396,10 +437,20 @@ function App() {
       .replace(/^write\s+/gi, "")
       .replace(/^put\s+/gi, "")
       .replace(/^do\s+/gi, "")
-      .replace(/later today/gi, "")
-      .replace(/this evening/gi, "")
       .replace(/later today to/gi, "")
       .replace(/this evening to/gi, "")
+      .replace(/this morning to/gi, "")
+      .replace(/this afternoon to/gi, "")
+      .replace(/tonight to/gi, "")
+      .replace(/later today/gi, "")
+      .replace(/this evening/gi, "")
+      .replace(/this morning/gi, "")
+      .replace(/this afternoon/gi, "")
+      .replace(/tonight/gi, "")
+      .replace(/tomorrow morning/gi, "")
+      .replace(/tomorrow afternoon/gi, "")
+      .replace(/tomorrow evening/gi, "")
+      .replace(/tomorrow night/gi, "")
       .replace(/remind me tomorrow to\s+/gi, "")
       .replace(/remind me today to\s+/gi, "")
       .replace(/remind me to\s+/gi, "")
