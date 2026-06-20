@@ -150,7 +150,11 @@ function App() {
       return today.toISOString();
     }
 
-    if (lowerText.includes("today")) {
+    if (
+      lowerText.includes("today") ||
+      lowerText.includes("later today") ||
+      lowerText.includes("this evening")
+    ) {
       return today.toISOString();
     }
 
@@ -159,6 +163,15 @@ function App() {
 
   function getDueTime(text) {
     const lowerText = text.toLowerCase();
+
+    if (lowerText.includes("later today")) {
+      return "17:00";
+    }
+
+    if (lowerText.includes("this evening")) {
+      return "19:00";
+    }
+
     const match = lowerText.match(/at (\d{1,2})(:\d{2})?/);
 
     if (!match) return null;
@@ -379,6 +392,14 @@ function App() {
 
   function cleanTaskText(text) {
     return text
+      .replace(/^add\s+/gi, "")
+      .replace(/^write\s+/gi, "")
+      .replace(/^put\s+/gi, "")
+      .replace(/^do\s+/gi, "")
+      .replace(/later today/gi, "")
+      .replace(/this evening/gi, "")
+      .replace(/later today to/gi, "")
+      .replace(/this evening to/gi, "")
       .replace(/remind me tomorrow to\s+/gi, "")
       .replace(/remind me today to\s+/gi, "")
       .replace(/remind me to\s+/gi, "")
