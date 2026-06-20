@@ -171,6 +171,11 @@ function App() {
       return today.toISOString();
     }
 
+    if (lowerText.includes("next week")) {
+      today.setDate(today.getDate() + 7);
+      return today.toISOString();
+    }
+
     return null;
   }
 
@@ -405,30 +410,35 @@ function App() {
   }
 
   function buildConfirmation(task) {
-    let message = "I added " + task.text;
-
     if (task.relativeText) {
       return "I added " + task.text + " " + task.relativeText + ".";
     }
 
+    let message = "I added " + task.text;
+
     if (task.dueDate) {
-     const dueDate = new Date(task.dueDate);
-     const today = new Date();
+      const dueDate = new Date(task.dueDate);
+
+      const today = new Date();
+
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
 
       if (dueDate.toDateString() === today.toDateString()) {
         message += " for today";
-      } else {
+      } else if (dueDate.toDateString() === tomorrow.toDateString()) {
         message += " for tomorrow";
+      } else {
+        message += " for " + dueDate.toLocaleDateString();
       }
     }
 
-     if (task.dueTime) {
-       message += " at " + task.dueTime;
-     }
+    if (task.dueTime) {
+      message += " at " + task.dueTime;
+    }
 
     return message + ".";
   }
-
   
 
   function cleanTaskText(text) {
@@ -451,6 +461,7 @@ function App() {
       .replace(/tomorrow afternoon/gi, "")
       .replace(/tomorrow evening/gi, "")
       .replace(/tomorrow night/gi, "")
+      .replace(/next week/gi, "")
       .replace(/remind me tomorrow to\s+/gi, "")
       .replace(/remind me today to\s+/gi, "")
       .replace(/remind me to\s+/gi, "")
