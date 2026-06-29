@@ -1229,9 +1229,7 @@ function App() {
   }
 
   function getRecommendedTask() {
-    const activeTasks = tasks.filter(
-      (task) => !task.done
-    );
+    const activeTasks = tasks.filter((task) => !task.done);
 
     if (activeTasks.length === 0) {
       return null;
@@ -1244,23 +1242,21 @@ function App() {
     };
 
     return [...activeTasks].sort((a, b) => {
-      if (
-        priorityScore[a.priority] !==
-        priorityScore[b.priority]
-      ) {
-        return (
-          priorityScore[b.priority] -
-          priorityScore[a.priority]
-        );
+      const statusA = getDueStatus(a);
+      const statusB = getDueStatus(b);
+
+      if (statusA === "Overdue" && statusB !== "Overdue") return -1;
+      if (statusB === "Overdue" && statusA !== "Overdue") return 1;
+
+      if (statusA === "Due today" && statusB !== "Due today") return -1;
+      if (statusB === "Due today" && statusA !== "Due today") return 1;
+
+      if (priorityScore[a.priority] !== priorityScore[b.priority]) {
+        return priorityScore[b.priority] - priorityScore[a.priority];
       }
 
-      const dateA =
-        getTaskDateTime(a) ||
-        new Date(9999, 0, 1);
-
-      const dateB =
-        getTaskDateTime(b) ||
-        new Date(9999, 0, 1);
+      const dateA = getTaskDateTime(a) || new Date(9999, 0, 1);
+      const dateB = getTaskDateTime(b) || new Date(9999, 0, 1);
 
       return dateA - dateB;
     })[0];
